@@ -42,7 +42,7 @@ namespace ArvoreAvl.src.Dtos
 
             if (Id > number)
             {
-                if (Left == null)
+                if (Left is null)
                 {
                     Left = new Node(number);
                 }
@@ -54,7 +54,7 @@ namespace ArvoreAvl.src.Dtos
 
             if (Id < number)
             {
-                if (Right == null)
+                if (Right is null)
                 {
                     Right = new Node(number);
                 }
@@ -63,6 +63,87 @@ namespace ArvoreAvl.src.Dtos
                     Right.Validator3000(number);
                 }
             }
+
+            AtualizarBFactor();
+
+
+        }
+
+        /// <summary>
+        /// Calcula a altura da arvore. Para calcular fator de balanceamento.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        private int Altura(Node node)
+        {
+            if (node is null)
+            {
+                return 0;
+            }
+
+            int alturaEsquerda = Altura(node.Left);
+            int alturaDireita = Altura(node.Right);
+
+            return Math.Max(alturaEsquerda, alturaDireita) + 1;
+        }
+
+        /// <summary>
+        /// Calcula o fator de balanceamento.
+        /// </summary>
+        private void AtualizarBFactor()
+        {
+            int alturaEsquerda = Altura(Left);
+            int alturaDireita = Altura(Right);
+            BFactor = alturaEsquerda - alturaDireita;
+        }
+
+        /// <summary>
+        /// Realiza o balanceamento da arvore.
+        /// </summary>
+        private void Balancear()
+        {
+            if (Left is null)
+                return;
+
+
+            if (Right is null)
+                return;
+
+            if (BFactor > 1)
+            {
+                if (Left.BFactor >= 0)
+                {
+                    RotacaoDireita();
+                }
+                else
+                {
+                    Left.RotacaoEsquerda();
+                    RotacaoDireita();
+                }
+            }
+            else if (BFactor < -1)
+            {
+
+                if (Right.BFactor <= 0)
+                {
+                    RotacaoEsquerda();
+                }
+                else
+                {
+                    Right.RotacaoDireita();
+                    RotacaoEsquerda();
+                }
+            }
+        }
+
+        private void RotacaoDireita()
+        {
+
+        }
+
+        private void RotacaoEsquerda()
+        {
+
         }
     }
 }

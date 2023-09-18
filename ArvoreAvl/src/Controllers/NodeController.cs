@@ -25,7 +25,7 @@ namespace ArvoreAvl.src.Controllers
         {
             CreateRoot(number);
 
-            if(root.Id > number)
+            if (root.Id > number)
             {
                 root.Right.Validator3000(number);
             }
