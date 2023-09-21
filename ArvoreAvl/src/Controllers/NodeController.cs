@@ -1,25 +1,19 @@
-﻿
+﻿#pragma warning disable CS8602
 using ArvoreAvl.src.Dtos;
 
 namespace ArvoreAvl.src.Controllers
 {
     public class NodeController
     {
-        public NodeController()
-        {
-            //newRoot();
-        }
+        Node root;
 
-        Node? root = new Node();
-        Node newNode = new Node();
-        
-        ///// <summary>
-        ///// Criando a raiz da arvore.
-        ///// </summary>
-        //public void newRoot()
-        //{
-        //    root = null;
-        //}
+        private void CreateRoot(int number)
+        {
+            if (root is null)
+            {
+                root = new Node(number);
+            }
+        }
 
         public void Inserir(int number)
         {
@@ -27,23 +21,75 @@ namespace ArvoreAvl.src.Controllers
 
             if (root.Id > number)
             {
+                if (root.Right is null)
+                    root.Right = new Node(number);
+
                 root.Right.Validator3000(number);
             }
 
-            if(newNode.Id < number)
+            if (root.Id < number)
             {
+                if (root.Left is null)
+                    root.Left = new Node(number);
+
                 root.Left.Validator3000(number);
             }
         }
 
-        private void CreateRoot(int number)
+        public void Buscar(int number)
         {
-            newNode.Id = number;
-
             if (root is null)
             {
-                root = newNode;
+                return;
+            }
+
+            if (root.Id > number)
+            {
+                Console.WriteLine(root.Right.Buscar(number));
+            }
+
+            if (root.Id < number)
+            {
+                Console.WriteLine(root.Left.Buscar(number));
+            }
+
+            Console.WriteLine(root);
+        }
+
+        public void BuscaCaminhamento(int value)
+        {
+            switch (value)
+            {
+                case 1:
+                    root.PreOrdem();
+                    break;
+                case 2:
+                    root.PosOrdem();
+                    break;
+                case 3:
+                    root.EmOrdem();
+                    break;
             }
         }
+
+        /// <summary>
+        /// Mostra a arvore
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="prefix"></param>
+        public void ImprimirArvore()
+        {
+            if (root != null)
+            {
+                Console.WriteLine("Árvore AVL:");
+                root.PrintTree(root);
+            }
+            else
+            {
+                Console.WriteLine("A árvore está vazia.");
+            }
+        }
+
     }
 }
+#pragma warning restore CS8602

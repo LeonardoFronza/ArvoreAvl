@@ -65,7 +65,7 @@ namespace ArvoreAvl.src.Dtos
             }
 
             AtualizarBFactor();
-
+            Balancear();
 
         }
 
@@ -115,7 +115,7 @@ namespace ArvoreAvl.src.Dtos
                 {
                     RotacaoDireita();
                 }
-                else
+                else if (BFactor > 0 && Left.BFactor < 0)
                 {
                     Left.RotacaoEsquerda();
                     RotacaoDireita();
@@ -128,7 +128,7 @@ namespace ArvoreAvl.src.Dtos
                 {
                     RotacaoEsquerda();
                 }
-                else
+                else if(BFactor < 0 && Right.BFactor > 0)
                 {
                     Right.RotacaoDireita();
                     RotacaoEsquerda();
@@ -138,12 +138,120 @@ namespace ArvoreAvl.src.Dtos
 
         private void RotacaoDireita()
         {
-
+            int valorRaiz = Id;
+            Id = Left.Id;
+            Right.Id = valorRaiz;
+            Left.Id = Left.Left.Id;
         }
 
         private void RotacaoEsquerda()
         {
+            int valorRaiz = Id;
+            Id = Right.Id;
+            Left.Id = valorRaiz;
+            Right.Id = Right.Right.Id;
+        }
 
+        /// <summary>
+        /// Busca elemento na arvore.
+        /// </summary>
+        /// <param name="number"></param>
+        /// <returns></returns>
+        public Node Buscar(int number)
+        {
+            if (number == Id)
+            {
+                return this; // Encontramos o valor, retornamos este nó.
+            }
+            else if (number < Id && Left != null)
+            {
+                return Left.Buscar(number); // O valor pode estar na subárvore esquerda.
+            }
+            else if (number > Id && Right != null)
+            {
+                return Right.Buscar(number); // O valor pode estar na subárvore direita.
+            }
+            else
+            {
+                return null; // O valor não está na árvore.
+            }
+        }
+
+        /// <summary>
+        /// Mostra os itens da arvore em pré-oredem.
+        /// </summary>
+        public void PreOrdem()
+        {
+            Console.Write(Id + ", ");
+
+            if (Left is not null)
+            {
+                Left.PreOrdem();
+            }
+
+            if (Right is not null)
+            {
+                Right.PreOrdem();
+            }
+        }
+
+        public void PosOrdem()
+        {
+            if (Left is not null)
+            {
+                Left.PreOrdem();
+            }
+
+            if (Right is not null)
+            {
+                Right.PreOrdem();
+            }
+
+            Console.Write(Id + ", ");
+        }
+
+        public void EmOrdem()
+        {
+            if (Left is not null)
+            {
+                Left.PreOrdem();
+            }
+
+            Console.Write(Id + ", ");
+
+            if (Right is not null)
+            {
+                Right.PreOrdem();
+            }
+        }
+
+        public void PrintTree(Node teste)
+        {
+            PrintTree(teste, "");
+        }
+
+        public void PrintTree(Node node, string prefix)
+        {
+            if (node == null)
+                return;
+
+            bool isLeaf = (node.Left == null && node.Right == null);
+            string nodeType = isLeaf ? "L" : "I"; // L para folha, I para nó interno
+
+            Console.WriteLine($"{prefix}└── [{nodeType}] {node.Id}");
+
+            if (node.Left != null || node.Right != null)
+            {
+                string newPrefix = prefix + (isLeaf ? "    " : "│   ");
+                if (node.Left != null)
+                {
+                    PrintTree(node.Left, newPrefix + "├── ");
+                }
+                if (node.Right != null)
+                {
+                    PrintTree(node.Right, newPrefix + "└── ");
+                }
+            }
         }
     }
 }
