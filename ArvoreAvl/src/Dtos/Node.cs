@@ -65,11 +65,8 @@ namespace ArvoreAvl.src.Dtos
                 }
             }
 
-            AtualizarBFactor();
-            Balancear();
-            AtualizarBFactor();
-
-            return this;
+            //AtualizarBFactor();
+            return Balancear();
         }
 
         /// <summary>
