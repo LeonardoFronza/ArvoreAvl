@@ -5,7 +5,7 @@ namespace ArvoreAvl.src.Controllers
 {
     public class NodeController
     {
-        Node root;
+        private Node root;
 
         private void CreateRoot(int number)
         {
@@ -15,25 +15,13 @@ namespace ArvoreAvl.src.Controllers
             }
         }
 
-        public void Inserir(int number)
+        public Node Inserir(int number)
         {
             CreateRoot(number);
 
-            if (root.Id > number)
-            {
-                if (root.Right is null)
-                    root.Right = new Node(number);
+            root.Validator3000(number);
 
-                root.Right.Validator3000(number);
-            }
-
-            if (root.Id < number)
-            {
-                if (root.Left is null)
-                    root.Left = new Node(number);
-
-                root.Left.Validator3000(number);
-            }
+            return root;
         }
 
         public void Buscar(int number)

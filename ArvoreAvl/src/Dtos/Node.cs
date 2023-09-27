@@ -17,12 +17,12 @@ namespace ArvoreAvl.src.Dtos
         /// <summary>
         /// Esquerda.
         /// </summary>
-        public Node? Left { get; set; }
+        public Node Left { get; set; }
 
         /// <summary>
         /// Direita.
         /// </summary>
-        public Node? Right { get; set; }
+        public Node Right { get; set; }
 
         /// <summary>
         /// Fator de balanceamento.
@@ -33,11 +33,11 @@ namespace ArvoreAvl.src.Dtos
         /// Valida os itens a serem inseridos.
         /// </summary>
         /// <param name="number"></param>
-        public void Validator3000(int number)
+        public Node Validator3000(int number)
         {
             if (Id == number)
             {
-                return;
+                return this;
             }
 
             if (Id > number)
@@ -48,11 +48,10 @@ namespace ArvoreAvl.src.Dtos
                 }
                 else
                 {
-                    Left.Validator3000(number);
+                    Left = Left.Validator3000(number);
                 }
             }
-
-            if (Id < number)
+            else if (Id < number)
             {
                 if (Right is null)
                 {
@@ -60,13 +59,14 @@ namespace ArvoreAvl.src.Dtos
                 }
                 else
                 {
-                    Right.Validator3000(number);
+                    Right = Right.Validator3000(number);
                 }
             }
 
             AtualizarBFactor();
             Balancear();
 
+            return this;
         }
 
         /// <summary>
@@ -90,66 +90,86 @@ namespace ArvoreAvl.src.Dtos
         /// <summary>
         /// Calcula o fator de balanceamento.
         /// </summary>
-        private void AtualizarBFactor()
+        public void AtualizarBFactor()
         {
             int alturaEsquerda = Altura(Left);
             int alturaDireita = Altura(Right);
+            Console.WriteLine("-----------------");
+            Console.WriteLine(alturaEsquerda + "--" + Id);
+            Console.WriteLine(alturaDireita + "--" + Id);
             BFactor = alturaEsquerda - alturaDireita;
+            Console.WriteLine(BFactor.ToString());
         }
 
         /// <summary>
         /// Realiza o balanceamento da arvore.
         /// </summary>
-        private void Balancear()
+        public Node Balancear()
         {
-            if (Left is null)
-                return;
-
-
-            if (Right is null)
-                return;
-
             if (BFactor > 1)
             {
                 if (Left.BFactor >= 0)
                 {
-                    RotacaoDireita();
+                    return RotacaoDireita();
                 }
-                else if (BFactor > 0 && Left.BFactor < 0)
+                else
                 {
                     Left.RotacaoEsquerda();
-                    RotacaoDireita();
+                    return RotacaoDireita();
                 }
             }
             else if (BFactor < -1)
             {
-
                 if (Right.BFactor <= 0)
                 {
-                    RotacaoEsquerda();
+                    return RotacaoEsquerda();
                 }
-                else if(BFactor < 0 && Right.BFactor > 0)
+                else
                 {
                     Right.RotacaoDireita();
-                    RotacaoEsquerda();
+                    return RotacaoEsquerda();
                 }
             }
+
+            return null;
         }
 
-        private void RotacaoDireita()
+        private Node RotacaoDireita()
         {
-            int valorRaiz = Id;
+            int salvaRaiz = Id;
+            if (Left.Left is null)
+            {
+                Left.Left = new Node(Left.Id);
+            }
+            int salvaIdEsquerda = Left.Left.Id;
+
             Id = Left.Id;
-            Right.Id = valorRaiz;
-            Left.Id = Left.Left.Id;
+            Left = null;
+
+            Right = new Node(salvaRaiz);
+            Left = new Node(salvaIdEsquerda);
+
+            return Left;
         }
 
-        private void RotacaoEsquerda()
+        private Node RotacaoEsquerda()
         {
-            int valorRaiz = Id;
+            int salvaRaiz = Id;
+
+            if (Right.Right is null)
+            {
+                Right.Right = new Node(Right.Id);
+            }
+
+            int salvaIdDireita = Right.Right.Id;
+
             Id = Right.Id;
-            Left.Id = valorRaiz;
-            Right.Id = Right.Right.Id;
+            Right = null;
+
+            Left = new Node(salvaRaiz);
+            Right = new Node(salvaIdDireita);
+
+            return Right;
         }
 
         /// <summary>
@@ -161,19 +181,19 @@ namespace ArvoreAvl.src.Dtos
         {
             if (number == Id)
             {
-                return this; // Encontramos o valor, retornamos este nó.
+                return this;
             }
             else if (number < Id && Left != null)
             {
-                return Left.Buscar(number); // O valor pode estar na subárvore esquerda.
+                return Left.Buscar(number);
             }
             else if (number > Id && Right != null)
             {
-                return Right.Buscar(number); // O valor pode estar na subárvore direita.
+                return Right.Buscar(number);
             }
             else
             {
-                return null; // O valor não está na árvore.
+                return null;
             }
         }
 
