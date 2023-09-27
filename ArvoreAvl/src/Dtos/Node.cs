@@ -1,4 +1,6 @@
 ﻿
+using System.Text.RegularExpressions;
+
 namespace ArvoreAvl.src.Dtos
 {
     public class Node
@@ -65,6 +67,7 @@ namespace ArvoreAvl.src.Dtos
 
             AtualizarBFactor();
             Balancear();
+            AtualizarBFactor();
 
             return this;
         }
@@ -131,45 +134,33 @@ namespace ArvoreAvl.src.Dtos
                 }
             }
 
-            return null;
+            return this;
         }
 
         private Node RotacaoDireita()
         {
-            int salvaRaiz = Id;
-            if (Left.Left is null)
-            {
-                Left.Left = new Node(Left.Id);
-            }
-            int salvaIdEsquerda = Left.Left.Id;
+            var retorno = Left;
+            var temp = retorno.Right;
+            retorno.Right = this;
+            Left = temp;
 
-            Id = Left.Id;
-            Left = null;
+            AtualizarBFactor();
+            retorno.AtualizarBFactor();
 
-            Right = new Node(salvaRaiz);
-            Left = new Node(salvaIdEsquerda);
-
-            return Left;
+            return retorno;
         }
 
         private Node RotacaoEsquerda()
         {
-            int salvaRaiz = Id;
+            var retorno = Right;
+            var temp = retorno.Left;
+            retorno.Left = this;
+            Right = temp;
 
-            if (Right.Right is null)
-            {
-                Right.Right = new Node(Right.Id);
-            }
+            AtualizarBFactor();
+            retorno.AtualizarBFactor();
 
-            int salvaIdDireita = Right.Right.Id;
-
-            Id = Right.Id;
-            Right = null;
-
-            Left = new Node(salvaRaiz);
-            Right = new Node(salvaIdDireita);
-
-            return Right;
+            return retorno;
         }
 
         /// <summary>
