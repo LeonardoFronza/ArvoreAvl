@@ -15,3 +15,4 @@ controller.Inserir(80);
 controller.ImprimirArvore();
 
 //controller.Buscar(20);
+controller.ImprimirArvore();
