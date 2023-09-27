@@ -35,11 +35,11 @@ namespace ArvoreAvl.src.Dtos
         /// Valida os itens a serem inseridos.
         /// </summary>
         /// <param name="number"></param>
-        public Node Validator3000(int number)
+        public void Validator3000(int number)
         {
             if (Id == number)
             {
-                return this;
+                return;
             }
 
             if (Id > number)
@@ -50,7 +50,7 @@ namespace ArvoreAvl.src.Dtos
                 }
                 else
                 {
-                    Left = Left.Validator3000(number);
+                    Left.Validator3000(number);
                 }
             }
             else if (Id < number)
@@ -61,15 +61,12 @@ namespace ArvoreAvl.src.Dtos
                 }
                 else
                 {
-                    Right = Right.Validator3000(number);
+                    Right.Validator3000(number);
                 }
             }
 
             AtualizarBFactor();
             Balancear();
-            AtualizarBFactor();
-
-            return this;
         }
 
         /// <summary>
@@ -97,70 +94,64 @@ namespace ArvoreAvl.src.Dtos
         {
             int alturaEsquerda = Altura(Left);
             int alturaDireita = Altura(Right);
-            Console.WriteLine("-----------------");
-            Console.WriteLine(alturaEsquerda + "--" + Id);
-            Console.WriteLine(alturaDireita + "--" + Id);
+            //Console.WriteLine("-----------------");
+            //Console.WriteLine(alturaEsquerda + "--" + Id);
+            //Console.WriteLine(alturaDireita + "--" + Id);
             BFactor = alturaEsquerda - alturaDireita;
-            Console.WriteLine(BFactor.ToString());
+            //Console.WriteLine(BFactor.ToString());
         }
 
         /// <summary>
         /// Realiza o balanceamento da arvore.
         /// </summary>
-        public Node Balancear()
+        public void Balancear()
         {
             if (BFactor > 1)
             {
                 if (Left.BFactor >= 0)
                 {
-                    return RotacaoDireita();
+                    RotacaoDireita();
                 }
                 else
                 {
                     Left.RotacaoEsquerda();
-                    return RotacaoDireita();
+                    RotacaoDireita();
                 }
             }
             else if (BFactor < -1)
             {
                 if (Right.BFactor <= 0)
                 {
-                    return RotacaoEsquerda();
+                    RotacaoEsquerda();
                 }
                 else
                 {
                     Right.RotacaoDireita();
-                    return RotacaoEsquerda();
+                    RotacaoEsquerda();
                 }
             }
-
-            return this;
         }
 
-        private Node RotacaoDireita()
+        private void RotacaoDireita()
         {
-            var retorno = Left;
-            var temp = retorno.Right;
-            retorno.Right = this;
-            Left = temp;
-
+            Node novo = new Node(Id);
+            novo.Right = Right;
+            novo.Left = Left.Right;
+            Right = novo;
+            Id = Left.Id;
+            Left = Left.Left;
             AtualizarBFactor();
-            retorno.AtualizarBFactor();
-
-            return retorno;
         }
 
-        private Node RotacaoEsquerda()
+        private void RotacaoEsquerda()
         {
-            var retorno = Right;
-            var temp = retorno.Left;
-            retorno.Left = this;
-            Right = temp;
-
+            Node novo = new Node(Id);
+            novo.Left = Left;
+            novo.Right = Right.Left;
+            Left = novo;
+            Id = Right.Id;
+            Right = Right.Right;
             AtualizarBFactor();
-            retorno.AtualizarBFactor();
-
-            return retorno;
         }
 
         /// <summary>
