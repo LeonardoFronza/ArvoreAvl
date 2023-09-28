@@ -56,18 +56,8 @@ namespace ArvoreAvl.src.Controllers
             {
                 return;
             }
-
-            if (root.Id > number)
-            {
-                nodeBusca = root.Buscar(number);
-                root.PrintTree(nodeBusca);
-            }
-
-            if (root.Id < number)
-            {
-                nodeBusca = root.Buscar(number);
-                root.PrintTree(nodeBusca);
-            }
+            nodeBusca = root.Buscar(number);
+            root.PrintTree(nodeBusca);
         }
 
         /// <summary>
