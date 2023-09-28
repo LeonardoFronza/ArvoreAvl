@@ -288,9 +288,9 @@ namespace ArvoreAvl.src.Dtos
                 }
                 else
                 {
-                    Node sucessor = EncontrarMenorNode(Direita);
+                    Node sucessor = EncontrarMaiorNode(Esquerda);
                     Id = sucessor.Id;
-                    Direita = Direita.Remover(sucessor.Id);
+                    Esquerda = Esquerda.Remover(sucessor.Id);
                     AtualizarBFactor();
                     Balancear();
                 }
@@ -299,11 +299,11 @@ namespace ArvoreAvl.src.Dtos
             return this;
         }
 
-        private Node EncontrarMenorNode(Node node)
+        private Node EncontrarMaiorNode(Node node)
         {
-            while (node.Esquerda != null)
+            while (node.Direita != null)
             {
-                node = node.Esquerda;
+                node = node.Direita;
             }
             return node;
         }
@@ -326,8 +326,8 @@ namespace ArvoreAvl.src.Dtos
             {
                 if (node.Direita != null)
                 {
-                    PrintTree(node.Esquerda, prefix + "│   ├── ");
                     PrintTree(node.Direita, prefix + "│   └── ");
+                    PrintTree(node.Esquerda, prefix + "│   ├── ");
                 }
                 else
                 {
