@@ -5,7 +5,9 @@ namespace ArvoreAvl.src.Dtos
 {
     public class Node
     {
-        public Node() { }
+        /// <summary>
+        /// Construtor.
+        /// </summary>
         public Node(int number)
         {
             Id = number;
@@ -19,12 +21,12 @@ namespace ArvoreAvl.src.Dtos
         /// <summary>
         /// Esquerda.
         /// </summary>
-        public Node Left { get; set; }
+        public Node Esquerda { get; set; }
 
         /// <summary>
         /// Direita.
         /// </summary>
-        public Node Right { get; set; }
+        public Node Direita { get; set; }
 
         /// <summary>
         /// Fator de balanceamento.
@@ -44,24 +46,24 @@ namespace ArvoreAvl.src.Dtos
 
             if (Id > number)
             {
-                if (Left is null)
+                if (Esquerda is null)
                 {
-                    Left = new Node(number);
+                    Esquerda = new Node(number);
                 }
                 else
                 {
-                    Left.Validator3000(number);
+                    Esquerda.Validator3000(number);
                 }
             }
             else if (Id < number)
             {
-                if (Right is null)
+                if (Direita is null)
                 {
-                    Right = new Node(number);
+                    Direita = new Node(number);
                 }
                 else
                 {
-                    Right.Validator3000(number);
+                    Direita.Validator3000(number);
                 }
             }
 
@@ -81,8 +83,8 @@ namespace ArvoreAvl.src.Dtos
                 return 0;
             }
 
-            int alturaEsquerda = Altura(node.Left);
-            int alturaDireita = Altura(node.Right);
+            int alturaEsquerda = Altura(node.Esquerda);
+            int alturaDireita = Altura(node.Direita);
 
             return Math.Max(alturaEsquerda, alturaDireita) + 1;
         }
@@ -92,13 +94,10 @@ namespace ArvoreAvl.src.Dtos
         /// </summary>
         public void AtualizarBFactor()
         {
-            int alturaEsquerda = Altura(Left);
-            int alturaDireita = Altura(Right);
-            //Console.WriteLine("-----------------");
-            //Console.WriteLine(alturaEsquerda + "--" + Id);
-            //Console.WriteLine(alturaDireita + "--" + Id);
+            int alturaEsquerda = Altura(Esquerda);
+            int alturaDireita = Altura(Direita);
+
             BFactor = alturaEsquerda - alturaDireita;
-            //Console.WriteLine(BFactor.ToString());
         }
 
         /// <summary>
@@ -108,49 +107,59 @@ namespace ArvoreAvl.src.Dtos
         {
             if (BFactor > 1)
             {
-                if (Left.BFactor >= 0)
+                if (Esquerda.BFactor >= 0)
                 {
                     RotacaoDireita();
                 }
                 else
                 {
-                    Left.RotacaoEsquerda();
+                    Esquerda.RotacaoEsquerda();
                     RotacaoDireita();
                 }
             }
             else if (BFactor < -1)
             {
-                if (Right.BFactor <= 0)
+                if (Direita.BFactor <= 0)
                 {
                     RotacaoEsquerda();
                 }
                 else
                 {
-                    Right.RotacaoDireita();
+                    Direita.RotacaoDireita();
                     RotacaoEsquerda();
                 }
             }
         }
 
+        /// <summary>
+        /// Realiza a rotação para a direita.
+        /// </summary>
         private void RotacaoDireita()
         {
-            Node novo = new Node(Id);
-            novo.Right = Right;
-            novo.Left = Left.Right;
-            Right = novo;
-            Id = Left.Id;
-            Left = Left.Left;
+            Node novo = new Node(Id)
+            {
+                Direita = Direita,
+                Esquerda = Esquerda.Direita
+            };
+            Direita = novo;
+            Id = Esquerda.Id;
+            Esquerda = Esquerda.Esquerda;
             AtualizarBFactor();
         }
 
+        /// <summary>
+        /// Realiza a rotação para a esquerda.
+        /// </summary>
         private void RotacaoEsquerda()
         {
-            Node novo = new Node(Id);
-            novo.Left = Left;
-            novo.Right = Right.Left;
-            Left = novo;
-            Id = Right.Id;
-            Right = Right.Right;
+            Node novo = new Node(Id)
+            {
+                Esquerda = Esquerda,
+                Direita = Direita.Esquerda
+            };
+            Esquerda = novo;
+            Id = Direita.Id;
+            Direita = Direita.Direita;
             AtualizarBFactor();
         }
 
@@ -165,13 +174,13 @@ namespace ArvoreAvl.src.Dtos
             {
                 return this;
             }
-            else if (number < Id && Left != null)
+            else if (number < Id && Esquerda != null)
             {
-                return Left.Buscar(number);
+                return Esquerda.Buscar(number);
             }
-            else if (number > Id && Right != null)
+            else if (number > Id && Direita != null)
             {
-                return Right.Buscar(number);
+                return Direita.Buscar(number);
             }
             else
             {
@@ -186,73 +195,142 @@ namespace ArvoreAvl.src.Dtos
         {
             Console.Write(Id + ", ");
 
-            if (Left is not null)
+            if (Esquerda is not null)
             {
-                Left.PreOrdem();
+                Esquerda.PreOrdem();
             }
 
-            if (Right is not null)
+            if (Direita is not null)
             {
-                Right.PreOrdem();
+                Direita.PreOrdem();
             }
         }
 
+        /// <summary>
+        /// Mostra os itens da arvore em pós-oredem.
+        /// </summary>
         public void PosOrdem()
         {
-            if (Left is not null)
+            if (Esquerda is not null)
             {
-                Left.PreOrdem();
+                Esquerda.PreOrdem();
             }
 
-            if (Right is not null)
+            if (Direita is not null)
             {
-                Right.PreOrdem();
+                Direita.PreOrdem();
             }
 
             Console.Write(Id + ", ");
         }
 
+        /// <summary>
+        /// Mostra os itens da arvore em ordem.
+        /// </summary>
         public void EmOrdem()
         {
-            if (Left is not null)
+            if (Esquerda is not null)
             {
-                Left.PreOrdem();
+                Esquerda.PreOrdem();
             }
 
             Console.Write(Id + ", ");
 
-            if (Right is not null)
+            if (Direita is not null)
             {
-                Right.PreOrdem();
+                Direita.PreOrdem();
             }
         }
 
-        public void PrintTree(Node teste)
+        /// <summary>
+        /// Remove um item da arvore.
+        /// </summary>
+        public Node Remover(int valor)
         {
-            PrintTree(teste, "");
+            if (valor < Id)
+            {
+                if (Esquerda != null)
+                {
+                    Esquerda = Esquerda.Remover(valor);
+                    AtualizarBFactor();
+                    Balancear();
+                }
+            }
+            else if (valor > Id)
+            {
+                if (Direita != null)
+                {
+                    Direita = Direita.Remover(valor);
+                    AtualizarBFactor();
+                    Balancear();
+                }
+            }
+            else
+            {
+                // Encontrou o nó a ser removido
+                if (Esquerda == null && Direita == null)
+                {
+                    return null;
+                }
+                else if (Esquerda == null)
+                {
+                    return Direita;
+                }
+                else if (Direita == null)
+                {
+                    return Esquerda;
+                }
+                else
+                {
+                    Node sucessor = EncontrarMenorNode(Direita);
+                    Id = sucessor.Id;
+                    Direita = Direita.Remover(sucessor.Id);
+                    AtualizarBFactor();
+                    Balancear();
+                }
+            }
+
+            return this;
         }
 
-        public void PrintTree(Node node, string prefix)
+        private Node EncontrarMenorNode(Node node)
+        {
+            while (node.Esquerda != null)
+            {
+                node = node.Esquerda;
+            }
+            return node;
+        }
+
+        /// <summary>
+        /// Imprime a arvore.
+        /// </summary>
+        public void PrintTree(Node node, string prefix = "")
         {
             if (node == null)
                 return;
 
-            bool isLeaf = (node.Left == null && node.Right == null);
-            string nodeType = isLeaf ? "L" : "I"; // L para folha, I para nó interno
+            bool isLeaf = (node.Esquerda == null && node.Direita == null);
+            string nodeType = isLeaf ? "F" : "P"; // P para pai, F para filho
 
-            Console.WriteLine($"{prefix}└── [{nodeType}] {node.Id}");
+            Console.Write(prefix);
+            Console.WriteLine($"[{nodeType}] {node.Id}");
 
-            if (node.Left != null || node.Right != null)
+            if (node.Esquerda != null)
             {
-                string newPrefix = prefix + (isLeaf ? "    " : "│   ");
-                if (node.Left != null)
+                if (node.Direita != null)
                 {
-                    PrintTree(node.Left, newPrefix + "├── ");
+                    PrintTree(node.Esquerda, prefix + "│   ├── ");
+                    PrintTree(node.Direita, prefix + "│   └── ");
                 }
-                if (node.Right != null)
+                else
                 {
-                    PrintTree(node.Right, newPrefix + "└── ");
+                    PrintTree(node.Esquerda, prefix + "    ├── ");
                 }
+            }
+            else if (node.Direita != null)
+            {
+                PrintTree(node.Direita, prefix + "    └── ");
             }
         }
     }

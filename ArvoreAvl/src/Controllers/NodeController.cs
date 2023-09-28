@@ -1,13 +1,19 @@
-﻿#pragma warning disable CS8602
+﻿
 using ArvoreAvl.src.Dtos;
 
 namespace ArvoreAvl.src.Controllers
 {
     public class NodeController
     {
-        private Node root;
+        /// <summary>
+        /// Raiz da arvore
+        /// </summary>
+        private Node? root;
 
-        private void CreateRoot(int number)
+        /// <summary>
+        /// Cria a raiz da arvore
+        /// </summary>
+        private void CriarArvore(int number)
         {
             if (root is null)
             {
@@ -15,17 +21,37 @@ namespace ArvoreAvl.src.Controllers
             }
         }
 
-        public Node Inserir(int number)
+        /// <summary>
+        /// Insere um item na arvore
+        /// </summary>
+        public Node? Inserir(int number)
         {
-            CreateRoot(number);
+            CriarArvore(number);
 
-            root.Validator3000(number);
+            if (root is not null)
+            {
+                    root.Validator3000(number);
+            }
 
             return root;
         }
 
+        public void Remover(int number)
+        {
+            if (root is null)
+            {
+                return;
+            }
+
+            root.Remover(number);
+        }
+
+        /// <summary>
+        /// Busca um item na arvore
+        /// </summary>
         public void Buscar(int number)
         {
+            Node nodeBusca;
             if (root is null)
             {
                 return;
@@ -33,19 +59,28 @@ namespace ArvoreAvl.src.Controllers
 
             if (root.Id > number)
             {
-                Console.WriteLine(root.Right.Buscar(number));
+                nodeBusca = root.Buscar(number);
+                root.PrintTree(nodeBusca);
             }
 
             if (root.Id < number)
             {
-                Console.WriteLine(root.Left.Buscar(number));
+                nodeBusca = root.Buscar(number);
+                root.PrintTree(nodeBusca);
             }
-
-            Console.WriteLine(root);
         }
 
+        /// <summary>
+        /// Busca caminhamento na arvore
+        /// </summary>
+        /// <param name="value"></param>
         public void BuscaCaminhamento(int value)
         {
+            if (root is null)
+            {
+                return;
+            }
+
             switch (value)
             {
                 case 1:
@@ -80,4 +115,3 @@ namespace ArvoreAvl.src.Controllers
 
     }
 }
-#pragma warning restore CS8602
