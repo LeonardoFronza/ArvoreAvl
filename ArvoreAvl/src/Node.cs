@@ -193,15 +193,17 @@ namespace ArvoreAvl.src.Dtos
         /// </summary>
         public void PreOrdem()
         {
-            Console.Write(Id + ", ");
+            Console.Write(Id);
 
             if (Esquerda is not null)
             {
+                Console.Write(", ");
                 Esquerda.PreOrdem();
             }
 
             if (Direita is not null)
             {
+                Console.Write(", ");
                 Direita.PreOrdem();
             }
         }
@@ -213,15 +215,17 @@ namespace ArvoreAvl.src.Dtos
         {
             if (Esquerda is not null)
             {
-                Esquerda.PreOrdem();
+                Esquerda.PosOrdem();
+                Console.Write(", ");
             }
 
             if (Direita is not null)
             {
-                Direita.PreOrdem();
+                Direita.PosOrdem();
+                Console.Write(", ");
             }
 
-            Console.Write(Id + ", ");
+            Console.Write(Id);
         }
 
         /// <summary>
@@ -231,14 +235,16 @@ namespace ArvoreAvl.src.Dtos
         {
             if (Esquerda is not null)
             {
-                Esquerda.PreOrdem();
+                Esquerda.EmOrdem();
+                Console.Write(", ");
             }
 
-            Console.Write(Id + ", ");
+            Console.Write(Id);
 
             if (Direita is not null)
             {
-                Direita.PreOrdem();
+                Console.Write(", ");
+                Direita.EmOrdem();
             }
         }
 
