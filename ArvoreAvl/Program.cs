@@ -14,6 +14,7 @@ while (sair)
     Console.WriteLine("4 - Mostrar arvore");
     Console.WriteLine("5 - Imprimir conforme caminhamento");
     Console.WriteLine("6 - Sair");
+    Console.WriteLine(" ");
 
     string entrada = Console.ReadLine() ?? string.Empty;
     int.TryParse(entrada, out int opcao);
@@ -62,7 +63,7 @@ while (sair)
             NodeController.Buscar(valorBusca);
             break;
         case 3:
-            Console.WriteLine("Digite o valor a ser buscado: ");
+            Console.WriteLine("Digite o valor a ser removido: ");
             int valorARemover = Convert.ToInt32(Console.ReadLine());
             NodeController.Remover(valorARemover);
             NodeController.ImprimirArvore();

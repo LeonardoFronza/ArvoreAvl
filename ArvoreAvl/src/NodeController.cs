@@ -43,7 +43,7 @@ namespace ArvoreAvl.src.Controllers
                 return;
             }
 
-            root.Remover(number);
+            root = root.Remover(number);
         }
 
         /// <summary>
