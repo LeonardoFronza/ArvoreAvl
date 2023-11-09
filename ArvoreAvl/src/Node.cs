@@ -2,30 +2,33 @@
 using System.Text.RegularExpressions;
 
 namespace ArvoreAvl.src.Dtos;
-public class Node
+public class Node<T> where T : IComparable<T>
 {
     /// <summary>
     /// Construtor.
     /// </summary>
-    public Node(int number)
+    public Node(T id, int index)
     {
-        Id = number;
+        Id = id;
+        Index = index;
     }
 
     /// <summary>
     /// Id.
     /// </summary>
-    public int Id { get; set; }
+    public T Id { get; set; }
+
+    public int Index { get; set; }
 
     /// <summary>
     /// Esquerda.
     /// </summary>
-    public Node Esquerda { get; set; }
+    public Node<T> Esquerda { get; set; }
 
     /// <summary>
     /// Direita.
     /// </summary>
-    public Node Direita { get; set; }
+    public Node<T> Direita { get; set; }
 
     /// <summary>
     /// Fator de balanceamento.
@@ -36,33 +39,33 @@ public class Node
     /// Valida os itens a serem inseridos.
     /// </summary>
     /// <param name="number"></param>
-    public void Validator3000(int number)
+    public void Validator3000(T number, int index)
     {
-        if (Id == number)
+        if (Id.CompareTo(number) == 0)
         {
             return;
         }
 
-        if (Id > number)
+        if (Id.CompareTo(number) > 0)
         {
             if (Esquerda is null)
             {
-                Esquerda = new Node(number);
+                Esquerda = new Node<T>(number, index);
             }
             else
             {
-                Esquerda.Validator3000(number);
+                Esquerda.Validator3000(number, index);
             }
         }
-        else if (Id < number)
+        else if (Id.CompareTo(number) < 0)
         {
             if (Direita is null)
             {
-                Direita = new Node(number);
+                Direita = new Node<T>(number, index);
             }
             else
             {
-                Direita.Validator3000(number);
+                Direita.Validator3000(number, index);
             }
         }
 
@@ -75,7 +78,7 @@ public class Node
     /// </summary>
     /// <param name="node"></param>
     /// <returns></returns>
-    private int Altura(Node node)
+    private int Altura(Node<T> node)
     {
         if (node is null)
         {
@@ -135,7 +138,7 @@ public class Node
     /// </summary>
     private void RotacaoDireita()
     {
-        Node novo = new Node(Id)
+        Node<T> novo = new Node<T>(Id,Index)
         {
             Direita = Direita,
             Esquerda = Esquerda.Direita
@@ -151,7 +154,7 @@ public class Node
     /// </summary>
     private void RotacaoEsquerda()
     {
-        Node novo = new Node(Id)
+        Node<T> novo = new Node<T>(Id,Index)
         {
             Esquerda = Esquerda,
             Direita = Direita.Esquerda
@@ -165,21 +168,21 @@ public class Node
     /// <summary>
     /// Busca elemento na arvore.
     /// </summary>
-    /// <param name="number"></param>
+    /// <param name="value"></param>
     /// <returns></returns>
-    public Node Buscar(int number)
+    public Node<T> Buscar(T value)
     {
-        if (number == Id)
+        if (Id.CompareTo(value) == 0)
         {
             return this;
         }
-        else if (number < Id && Esquerda != null)
+        else if (Id.CompareTo(value) < 0 && Esquerda != null)
         {
-            return Esquerda.Buscar(number);
+            return Esquerda.Buscar(value);
         }
-        else if (number > Id && Direita != null)
+        else if (Id.CompareTo(value) > 0 && Direita != null)
         {
-            return Direita.Buscar(number);
+            return Direita.Buscar(value);
         }
         else
         {
@@ -250,9 +253,9 @@ public class Node
     /// <summary>
     /// Remove um item da arvore.
     /// </summary>
-    public Node Remover(int valor)
+    public Node<T> Remover(T valor)
     {
-        if (valor < Id)
+        if (Id.CompareTo(valor) < 0)
         {
             if (Esquerda != null)
             {
@@ -261,7 +264,7 @@ public class Node
                 Balancear();
             }
         }
-        else if (valor > Id)
+        else if (Id.CompareTo(valor) > 0)
         {
             if (Direita != null)
             {
@@ -287,7 +290,7 @@ public class Node
             }
             else
             {
-                Node sucessor = EncontrarMaiorNode(Esquerda);
+                Node<T> sucessor = EncontrarMaiorNode(Esquerda);
                 Id = sucessor.Id;
                 Esquerda = Esquerda.Remover(sucessor.Id);
                 AtualizarBFactor();
@@ -298,7 +301,7 @@ public class Node
         return this;
     }
 
-    private Node EncontrarMaiorNode(Node node)
+    private Node<T> EncontrarMaiorNode(Node<T> node)
     {
         while (node.Direita != null)
         {
@@ -310,7 +313,7 @@ public class Node
     /// <summary>
     /// Imprime a arvore.
     /// </summary>
-    public void PrintTree(Node node, string prefix = "")
+    public void PrintTree(Node<T> node, string prefix = "")
     {
         if (node == null)
             return;

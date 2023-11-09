@@ -1,63 +1,64 @@
-﻿
-using ArvoreAvl.src.Dtos;
+﻿using ArvoreAvl.src.Dtos;
 
 namespace ArvoreAvl.src.Controllers;
 
-public class NodeController
+public class NodeController<T> where T : IComparable<T>
 {
     /// <summary>
     /// Raiz da arvore
     /// </summary>
-    private Node? root;
+    private Node<T> root;
 
     /// <summary>
     /// Cria a raiz da arvore
     /// </summary>
-    private void CriarArvore(int number)
+    private void CriarArvore(T value, int index)
     {
         if (root is null)
         {
-            root = new Node(number);
+            root = new Node<T>(value, index);
         }
     }
 
     /// <summary>
     /// Insere um item na arvore
     /// </summary>
-    public Node? Inserir(int number)
+    public Node<T>? Inserir(T value, int index)
     {
-        CriarArvore(number);
+        CriarArvore(value, index);
 
         if (root is not null)
         {
-            root.Validator3000(number);
+            root.Validator3000(value, index);
         }
 
         return root;
     }
 
-    public void Remover(int number)
+    public void Remover(T value)
     {
         if (root is null)
         {
             return;
         }
 
-        root = root.Remover(number);
+        root = root.Remover(value);
     }
 
     /// <summary>
     /// Busca um item na arvore
     /// </summary>
-    public void Buscar(int number)
+    public Node<T> Buscar(T value)
     {
-        Node nodeBusca;
+        Node<T> nodeBusca;
         if (root is null)
         {
-            return;
+            return null;
         }
-        nodeBusca = root.Buscar(number);
-        root.PrintTree(nodeBusca);
+        nodeBusca = root.Buscar(value);
+
+        return nodeBusca;
+        //root.PrintTree(nodeBusca);
     }
 
     /// <summary>

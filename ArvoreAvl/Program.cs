@@ -1,8 +1,8 @@
-﻿using ArvoreAvl.src;
-using ArvoreAvl.src.Controllers;
+﻿using ArvoreAvl.src.Controllers;
 using ArvoreAvl.src.Dtos;
 
-NodeController NodeController = new NodeController();
+
+CSVController Utils = new CSVController();
 IList<Pessoa> Pessoas = new List<Pessoa>();
 
 bool sair = true;
@@ -12,12 +12,11 @@ while (sair)
 {
     Console.WriteLine(" ");
     Console.WriteLine("Menu: ");
-    Console.WriteLine("1 - Inserir");
-    Console.WriteLine("2 - Buscar");
-    Console.WriteLine("3 - Remover");
-    Console.WriteLine("4 - Mostrar arvore");
+    Console.WriteLine("1 - Pega dados arquivo CSV");
+    Console.WriteLine("2 - Buscar por nome");
+    Console.WriteLine("3 - Buscar por cpf");
+    Console.WriteLine("4 - Buscar por Data de Nascimento");
     Console.WriteLine("5 - Imprimir conforme caminhamento");
-    Console.WriteLine("6 - Ler arquivo CSV");
     Console.WriteLine(" ");
 
     string entrada = Console.ReadLine() ?? string.Empty;
@@ -26,68 +25,26 @@ while (sair)
     switch (opcao)
     {
         case 1:
-            bool sairInserir = true;
-            while (sairInserir)
-            {
-                Console.WriteLine("Digite os valores a serem inseridos separados por vírgula (ex: 1,2,3): ");
-                string input = Console.ReadLine()?.Trim() ?? string.Empty;
+            Console.WriteLine("Digite o caminho do arquivo que vai ser importado: ");
+            string path = Console.ReadLine();
 
-                if (!string.IsNullOrEmpty(input))
-                {
-                    string[] valores = input.Split(',');
+            Pessoas = Utils.ReadCsv(path);
 
-                    foreach (string valorStr in valores)
-                    {
-                        if (int.TryParse(valorStr, out int valor))
-                        {
-                            NodeController.Inserir(valor);
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Ignorando valor inválido: {valorStr}");
-                        }
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Entrada inválida.");
-                }
-
-                Console.WriteLine("Deseja adicionar mais números? (S/N)");
-                string resposta = Console.ReadLine()?.Trim().ToUpper() ?? string.Empty;
-                if (resposta != "S" || resposta is null)
-                {
-                    sairInserir = false;
-                }
-            }
+            Console.WriteLine("Pessoas importadas com sucesso!");
             break;
         case 2:
-            Console.WriteLine("Digite o valor a ser buscado: ");
-            int valorBusca = Convert.ToInt32(Console.ReadLine());
-            NodeController.Buscar(valorBusca);
+            Utils.testeImpressao();
             break;
         case 3:
-            Console.WriteLine("Digite o valor a ser removido: ");
-            int valorARemover = Convert.ToInt32(Console.ReadLine());
-            NodeController.Remover(valorARemover);
-            NodeController.ImprimirArvore();
+            Utils.BuscaPessoaPeloCpf(12345678910);
             break;
         case 4:
-            NodeController.ImprimirArvore();
+            Utils.BuscaPessoaPeloNome("Fulano de Tal");
             break;
         case 5:
-            Console.WriteLine("Digite o tipo de caminhamento: ");
-            Console.WriteLine("1 - Pre Ordem");
-            Console.WriteLine("2 - Pos Ordem");
-            Console.WriteLine("3 - Em Ordem");
-            int tipoCaminhamento = Convert.ToInt32(Console.ReadLine());
-            NodeController.BuscaCaminhamento(tipoCaminhamento);
+            Utils.BuscaPessoaPelaDataDeNascimento("01/02/1958");
             break;
         case 6:
-            Pessoas = CSVController.ReadCsv("C:/Users/Leonardo Fronza/Desktop/ArvoreAvl/teste.csv");
-
-            CSVController.BuscaPessoaPeloCpf(Pessoas, 12345678910);
-            CSVController.BuscaPessoaPorChave(Pessoas, "Fulano");
 
             break;
         case 7:

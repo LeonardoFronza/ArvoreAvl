@@ -1,22 +1,28 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using ArvoreAvl.src.Dtos;
 
 namespace ArvoreAvl.src.Controllers;
 
 public class CSVController
 {
+    public  NodeController<string> ArvoreNome = new NodeController<string>();
+    public  NodeController<long> ArvoreCpf = new NodeController<long>();
+    public  NodeController<string> ArvoreData = new NodeController<string>();
+    IList<Pessoa> pessoas = new List<Pessoa>();
+
     /// <summary>
     /// Lê o arquivo CSV.
     /// </summary>
     /// <param name="path"></param>
     /// <returns></returns>
-    public static IList<Pessoa> ReadCsv(string path)
+    public IList<Pessoa> ReadCsv(string path)
     {
-        IList<Pessoa> pessoas = new List<Pessoa>();
 
         using (var reader = new StreamReader(path))
         {
+            int i=0;
             while (!reader.EndOfStream)
             {
                 var line = reader.ReadLine();
@@ -29,6 +35,10 @@ public class CSVController
                 pessoa.DataNascimento = values?[3];
                 pessoa.CidadeNascimento = values?[4];
 
+                ArvoreNome.Inserir(pessoa.Nome, i);
+                ArvoreCpf.Inserir(pessoa.Cpf, i);
+                ArvoreData.Inserir(pessoa.DataNascimento, i);
+                i++;
                 pessoas.Add(pessoa);
             }
         }
@@ -36,19 +46,24 @@ public class CSVController
         return pessoas;
     }
 
-    public static void BuscaPessoaPeloCpf(IList<Pessoa> pessoas, long cpf)
+    public void testeImpressao()
     {
-        foreach (Pessoa pessoa in pessoas)
-        {
-            if (pessoa.Cpf == cpf)
-            {
-                Console.WriteLine(pessoa.Nome);
-                Console.WriteLine(pessoa.Cpf);
-                Console.WriteLine(pessoa.Rg);
-                Console.WriteLine(pessoa.DataNascimento);
-                Console.WriteLine(pessoa.CidadeNascimento);
-            }
-        }
+        ArvoreNome.ImprimirArvore();
+    }
+
+    public void BuscaPessoaPeloCpf(long cpf)
+    {
+        Console.WriteLine(pessoas[ArvoreCpf.Buscar(cpf).Index].ToString());
+    }
+
+    public void BuscaPessoaPelaDataDeNascimento(string data)
+    {
+        Console.WriteLine(pessoas[ArvoreData.Buscar(data).Index].ToString());
+    }
+
+    public void BuscaPessoaPeloNome(string nome)
+    {
+        Console.WriteLine(pessoas[ArvoreNome.Buscar(nome).Index].ToString());
     }
 
     public static void BuscaPessoaPorChave(IList<Pessoa> pessoas, string palavra)
