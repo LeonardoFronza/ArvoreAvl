@@ -19,10 +19,9 @@ public class CSVController
     /// <returns></returns>
     public IList<Pessoa> ReadCsv(string path)
     {
-
+        int i=0;
         using (var reader = new StreamReader(path))
         {
-            int i=0;
             while (!reader.EndOfStream)
             {
                 var line = reader.ReadLine();
@@ -37,8 +36,7 @@ public class CSVController
 
                 ArvoreNome.Inserir(pessoa.Nome, i);
                 ArvoreCpf.Inserir(pessoa.Cpf, i);
-                ArvoreData.Inserir(pessoa.DataNascimento, i);
-                i++;
+                ArvoreData.Inserir(pessoa.DataNascimento, i++);
                 pessoas.Add(pessoa);
             }
         }
@@ -53,17 +51,24 @@ public class CSVController
 
     public void BuscaPessoaPeloCpf(long cpf)
     {
+        ArvoreCpf.ImprimirArvore();
         Console.WriteLine(pessoas[ArvoreCpf.Buscar(cpf).Index].ToString());
     }
 
     public void BuscaPessoaPelaDataDeNascimento(string data)
     {
+        ArvoreData.ImprimirArvore();
         Console.WriteLine(pessoas[ArvoreData.Buscar(data).Index].ToString());
     }
 
     public void BuscaPessoaPeloNome(string nome)
     {
-        Console.WriteLine(pessoas[ArvoreNome.Buscar(nome).Index].ToString());
+        ArvoreNome.ImprimirArvore();
+        foreach(int number in ArvoreNome.Buscar(nome).EmOrdem(nome))
+        {
+            Console.WriteLine(pessoas[number].ToString());
+        }
+        ;
     }
 
     public static void BuscaPessoaPorChave(IList<Pessoa> pessoas, string palavra)

@@ -39,38 +39,55 @@ public class Node<T> where T : IComparable<T>
     /// Valida os itens a serem inseridos.
     /// </summary>
     /// <param name="number"></param>
-    public void Validator3000(T number, int index)
+    public void Validator3000(T dado, int index)
     {
-        if (Id.CompareTo(number) == 0)
+        if (Id.CompareTo(dado) == 0)
         {
-            return;
+            if (index == Index) return;
+            if (index < Index)
+            {
+                ValidatorEsq(dado, index);
+            }
+            else if (index > Index)
+            {
+                ValidatorDir(dado, index);
+            }
         }
 
-        if (Id.CompareTo(number) > 0)
+        if (Id.CompareTo(dado) > 0)
         {
-            if (Esquerda is null)
-            {
-                Esquerda = new Node<T>(number, index);
-            }
-            else
-            {
-                Esquerda.Validator3000(number, index);
-            }
+            ValidatorEsq(dado, index);
         }
-        else if (Id.CompareTo(number) < 0)
+        else if (Id.CompareTo(dado) < 0)
         {
-            if (Direita is null)
-            {
-                Direita = new Node<T>(number, index);
-            }
-            else
-            {
-                Direita.Validator3000(number, index);
-            }
+            ValidatorDir(dado, index);
         }
 
         AtualizarBFactor();
         Balancear();
+    }
+
+    private void ValidatorEsq(T dado, int index)
+    {
+        if (Esquerda is null)
+        {
+            Esquerda = new Node<T>(dado, index);
+        }
+        else
+        {
+            Esquerda.Validator3000(dado, index);
+        }
+    }
+    private void ValidatorDir(T dado, int index)
+    {
+        if (Direita is null)
+        {
+            Direita = new Node<T>(dado, index);
+        }
+        else
+        {
+            Direita.Validator3000(dado, index);
+        }
     }
 
     /// <summary>
@@ -138,13 +155,14 @@ public class Node<T> where T : IComparable<T>
     /// </summary>
     private void RotacaoDireita()
     {
-        Node<T> novo = new Node<T>(Id,Index)
+        Node<T> novo = new Node<T>(Id, Index)
         {
             Direita = Direita,
             Esquerda = Esquerda.Direita
         };
         Direita = novo;
         Id = Esquerda.Id;
+        Index = Esquerda.Index;
         Esquerda = Esquerda.Esquerda;
         AtualizarBFactor();
     }
@@ -154,13 +172,14 @@ public class Node<T> where T : IComparable<T>
     /// </summary>
     private void RotacaoEsquerda()
     {
-        Node<T> novo = new Node<T>(Id,Index)
+        Node<T> novo = new Node<T>(Id, Index)
         {
             Esquerda = Esquerda,
             Direita = Direita.Esquerda
         };
         Esquerda = novo;
         Id = Direita.Id;
+        Index = Direita.Index;
         Direita = Direita.Direita;
         AtualizarBFactor();
     }
@@ -176,11 +195,11 @@ public class Node<T> where T : IComparable<T>
         {
             return this;
         }
-        else if (Id.CompareTo(value) < 0 && Esquerda != null)
+        else if (Id.CompareTo(value) > 0 && Esquerda != null)
         {
             return Esquerda.Buscar(value);
         }
-        else if (Id.CompareTo(value) > 0 && Direita != null)
+        else if (Id.CompareTo(value) < 0 && Direita != null)
         {
             return Direita.Buscar(value);
         }
@@ -233,21 +252,25 @@ public class Node<T> where T : IComparable<T>
     /// <summary>
     /// Mostra os itens da arvore em ordem.
     /// </summary>
-    public void EmOrdem()
+     IList<int> res = new List<int>();
+    public IList<int> EmOrdem(string pesquisa)
     {
         if (Esquerda is not null)
         {
-            Esquerda.EmOrdem();
-            Console.Write(", ");
+            Esquerda.EmOrdem(pesquisa);
         }
 
-        Console.Write(Id);
+        if(Id.ToString().StartsWith(pesquisa))
+        {
+            res.Add(this.Index);
+        }
 
         if (Direita is not null)
         {
-            Console.Write(", ");
-            Direita.EmOrdem();
+            Direita.EmOrdem(pesquisa);
         }
+
+        return res;
     }
 
     /// <summary>
@@ -322,7 +345,7 @@ public class Node<T> where T : IComparable<T>
         string nodeType = isLeaf ? "F" : "P"; // P para pai, F para filho
 
         Console.Write(prefix);
-        Console.WriteLine($"[{nodeType}] {node.Id}");
+        Console.WriteLine($"[{nodeType}] {node.Id} {node.Index}");
 
         if (node.Esquerda != null)
         {

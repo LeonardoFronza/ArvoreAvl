@@ -33,16 +33,17 @@ while (sair)
             Console.WriteLine("Pessoas importadas com sucesso!");
             break;
         case 2:
-            Utils.testeImpressao();
+            Utils.BuscaPessoaPeloNome("Cicrana Beltrana Delgrana");
+
             break;
         case 3:
             Utils.BuscaPessoaPeloCpf(12345678910);
             break;
         case 4:
-            Utils.BuscaPessoaPeloNome("Fulano de Tal");
+            Utils.BuscaPessoaPelaDataDeNascimento("01/02/1958");
             break;
         case 5:
-            Utils.BuscaPessoaPelaDataDeNascimento("01/02/1958");
+            Utils.testeImpressao();
             break;
         case 6:
 
