@@ -1,7 +1,5 @@
-﻿
-using System.Text.RegularExpressions;
+﻿namespace ArvoreAvl.src.Dtos;
 
-namespace ArvoreAvl.src.Dtos;
 public class Node<T> where T : IComparable<T>
 {
     /// <summary>
@@ -38,63 +36,54 @@ public class Node<T> where T : IComparable<T>
     /// <summary>
     /// Valida os itens a serem inseridos.
     /// </summary>
-    /// <param name="number"></param>
     public void Validator3000(T dado, int index)
     {
-        if (Id.CompareTo(dado) == 0)
+        if (Id.CompareTo(dado) == 0 && index != Index)
         {
-            if (index == Index) return;
-            if (index < Index)
-            {
-                ValidatorEsq(dado, index);
-            }
-            else if (index > Index)
-            {
-                ValidatorDir(dado, index);
-            }
+            Validate6000(dado, index, index < Index);
         }
 
         if (Id.CompareTo(dado) > 0)
         {
-            ValidatorEsq(dado, index);
+            Validate6000(dado, index, true);
         }
         else if (Id.CompareTo(dado) < 0)
         {
-            ValidatorDir(dado, index);
+            Validate6000(dado, index, false);
         }
 
         AtualizarBFactor();
         Balancear();
     }
 
-    private void ValidatorEsq(T dado, int index)
+    /// <summary>
+    /// Valida os itens a serem inseridos.
+    /// </summary>
+    private void Validate6000(T dado, int index, bool isLeft)
     {
-        if (Esquerda is null)
+        Node<T> node = isLeft ? Esquerda : Direita;
+
+        if (node is null)
         {
-            Esquerda = new Node<T>(dado, index);
+            node = new Node<T>(dado, index);
+            if (isLeft)
+            {
+                Esquerda = node;
+            }
+            else
+            {
+                Direita = node;
+            }
         }
         else
         {
-            Esquerda.Validator3000(dado, index);
-        }
-    }
-    private void ValidatorDir(T dado, int index)
-    {
-        if (Direita is null)
-        {
-            Direita = new Node<T>(dado, index);
-        }
-        else
-        {
-            Direita.Validator3000(dado, index);
+            node.Validator3000(dado, index);
         }
     }
 
     /// <summary>
     /// Calcula a altura da arvore. Para calcular fator de balanceamento.
     /// </summary>
-    /// <param name="node"></param>
-    /// <returns></returns>
     private int Altura(Node<T> node)
     {
         if (node is null)
@@ -187,11 +176,9 @@ public class Node<T> where T : IComparable<T>
     /// <summary>
     /// Busca elemento na arvore.
     /// </summary>
-    /// <param name="value"></param>
-    /// <returns></returns>
     public Node<T> Buscar(T value)
     {
-        if (Id.CompareTo(value) == 0)
+        if (Id.ToString().StartsWith(value.ToString()))
         {
             return this;
         }
@@ -210,67 +197,48 @@ public class Node<T> where T : IComparable<T>
     }
 
     /// <summary>
-    /// Mostra os itens da arvore em pré-oredem.
+    /// Busca elementos em um intervalo de dados.
     /// </summary>
-    public void PreOrdem()
+    public IList<Node<T>> BuscarNoIntervaloDeDados(IList<Node<T>> nodes, T value, T value2)
     {
-        Console.Write(Id);
-
-        if (Esquerda is not null)
+        if (Esquerda != null && value.CompareTo(Id) <= 0)
         {
-            Console.Write(", ");
-            Esquerda.PreOrdem();
+            Esquerda.BuscarNoIntervaloDeDados(nodes, value, value2);
         }
 
-        if (Direita is not null)
+        if (value.CompareTo(Id) <= 0 && value2.CompareTo(Id) >= 0)
         {
-            Console.Write(", ");
-            Direita.PreOrdem();
-        }
-    }
-
-    /// <summary>
-    /// Mostra os itens da arvore em pós-oredem.
-    /// </summary>
-    public void PosOrdem()
-    {
-        if (Esquerda is not null)
-        {
-            Esquerda.PosOrdem();
-            Console.Write(", ");
+            nodes.Add(this);
         }
 
-        if (Direita is not null)
+        if (Direita != null && value2.CompareTo(Id) > 0)
         {
-            Direita.PosOrdem();
-            Console.Write(", ");
+            Direita.BuscarNoIntervaloDeDados(nodes, value, value2);
         }
 
-        Console.Write(Id);
+        return nodes;
     }
 
     /// <summary>
     /// Mostra os itens da arvore em ordem.
     /// </summary>
-     IList<int> res = new List<int>();
-    public IList<int> EmOrdem(string pesquisa)
+    public void EmOrdem(IList<Pessoa> pessoa, string pesquisa)
     {
         if (Esquerda is not null)
         {
-            Esquerda.EmOrdem(pesquisa);
+            Esquerda.EmOrdem(pessoa, pesquisa);
         }
 
-        if(Id.ToString().StartsWith(pesquisa))
+        if (Id.ToString().StartsWith(pesquisa))
         {
-            res.Add(this.Index);
+            Console.WriteLine(pessoa[Index].ToString());
         }
 
         if (Direita is not null)
         {
-            Direita.EmOrdem(pesquisa);
+            Direita.EmOrdem(pessoa, pesquisa);
         }
 
-        return res;
     }
 
     /// <summary>
@@ -363,5 +331,13 @@ public class Node<T> where T : IComparable<T>
         {
             PrintTree(node.Direita, prefix + "    └── ");
         }
+    }
+
+    /// <summary>
+    /// Tratadando como mostrar o node.
+    /// </summary>
+    public override string ToString()
+    {
+        return $"Resultado: {{ Id: {Id}, Index: {Index} }}";
     }
 }

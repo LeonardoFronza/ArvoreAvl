@@ -1,25 +1,20 @@
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using ArvoreAvl.src.Dtos;
 
 namespace ArvoreAvl.src.Controllers;
 
 public class CSVController
 {
-    public  NodeController<string> ArvoreNome = new NodeController<string>();
-    public  NodeController<long> ArvoreCpf = new NodeController<long>();
-    public  NodeController<string> ArvoreData = new NodeController<string>();
+    public NodeController<string> ArvoreNome = new NodeController<string>();
+    public NodeController<long> ArvoreCpf = new NodeController<long>();
+    public NodeController<string> ArvoreData = new NodeController<string>();
     IList<Pessoa> pessoas = new List<Pessoa>();
 
     /// <summary>
     /// Lê o arquivo CSV.
     /// </summary>
-    /// <param name="path"></param>
-    /// <returns></returns>
     public IList<Pessoa> ReadCsv(string path)
     {
-        int i=0;
+        int i = 0;
         using (var reader = new StreamReader(path))
         {
             while (!reader.EndOfStream)
@@ -27,12 +22,19 @@ public class CSVController
                 var line = reader.ReadLine();
                 var values = line?.Split(';');
 
-                Pessoa pessoa = new Pessoa();
-                pessoa.Cpf = long.Parse(values?[0]);
-                pessoa.Rg = long.Parse(values[1]);
-                pessoa.Nome = values?[2];
-                pessoa.DataNascimento = values?[3];
-                pessoa.CidadeNascimento = values?[4];
+                if (values == null || values.Length <= 3) continue;
+
+                if (!long.TryParse(values[0], out var cpf) ||
+                    !long.TryParse(values[1], out var rg)) continue;
+
+                Pessoa pessoa = new Pessoa
+                {
+                    Cpf = cpf,
+                    Rg = rg,
+                    Nome = values[2],
+                    DataNascimento = values[3],
+                    CidadeNascimento = values[4]
+                };
 
                 ArvoreNome.Inserir(pessoa.Nome, i);
                 ArvoreCpf.Inserir(pessoa.Cpf, i);
@@ -44,48 +46,30 @@ public class CSVController
         return pessoas;
     }
 
-    public void testeImpressao()
-    {
-        ArvoreNome.ImprimirArvore();
-    }
-
+    //ok
     public void BuscaPessoaPeloCpf(long cpf)
     {
         ArvoreCpf.ImprimirArvore();
         Console.WriteLine(pessoas[ArvoreCpf.Buscar(cpf).Index].ToString());
     }
 
-    public void BuscaPessoaPelaDataDeNascimento(string data)
+    //ok
+    public void BuscaPessoaPelaDataDeNascimento(string dataInicio, string dataFim)
     {
+        IList<Node<string>> lista = new List<Node<string>>();
         ArvoreData.ImprimirArvore();
-        Console.WriteLine(pessoas[ArvoreData.Buscar(data).Index].ToString());
+        lista = ArvoreData.BuscarDataNascimento(dataInicio, dataFim);
+
+        foreach (var pessoa in lista)
+        {
+            Console.WriteLine(pessoa.ToString());
+        }
     }
 
+    //ok - Melhorar metodo do node para retonar uma lista de INT
     public void BuscaPessoaPeloNome(string nome)
     {
         ArvoreNome.ImprimirArvore();
-        foreach(int number in ArvoreNome.Buscar(nome).EmOrdem(nome))
-        {
-            Console.WriteLine(pessoas[number].ToString());
-        }
-        ;
-    }
-
-    public static void BuscaPessoaPorChave(IList<Pessoa> pessoas, string palavra)
-    {
-        if (pessoas is null)
-        {
-            Console.WriteLine("Não há pessoas cadastradas");
-            return;
-        }
-
-        foreach (Pessoa pessoa in pessoas)
-        {
-            if (pessoa.Nome.Contains(palavra))
-            {
-                int count = 1;
-                Console.WriteLine(count++ + "° Pessoa com Nome:" + pessoa.Nome + " CPF: " + pessoa.Cpf + " RG: " + pessoa.Rg + " Data de Nascimento: " + pessoa.DataNascimento + " Cidade Natal: " + pessoa.CidadeNascimento);
-            }
-        }
+        ArvoreNome.Buscar(nome).EmOrdem(pessoas, nome);
     }
 }

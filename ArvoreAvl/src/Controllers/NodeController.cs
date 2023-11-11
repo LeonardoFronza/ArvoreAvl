@@ -58,52 +58,28 @@ public class NodeController<T> where T : IComparable<T>
         nodeBusca = root.Buscar(value);
 
         return nodeBusca;
-        //root.PrintTree(nodeBusca);
     }
 
-        public Node<T> BuscarPessoa(T value)
+    public void EmOrdem(IList<Pessoa> pessoa, string pesquisa)
     {
-        Node<T> nodeBusca;
+        root.EmOrdem(pessoa, pesquisa);
+    }
+
+    public IList<Node<T>> BuscarDataNascimento(T value, T value2)
+    {
+        IList<Node<T>> nodeBusca = new List<Node<T>>();
         if (root is null)
         {
             return null;
         }
-        nodeBusca = root.Buscar(value);
 
+        nodeBusca = root.BuscarNoIntervaloDeDados(nodeBusca, value, value2);
         return nodeBusca;
-        //root.PrintTree(nodeBusca);
-    }
-
-    /// <summary>
-    /// Busca caminhamento na arvore
-    /// </summary>
-    /// <param name="value"></param>
-    public void BuscaCaminhamento(int value, string teste)
-    {
-        if (root is null)
-        {
-            return;
-        }
-
-        switch (value)
-        {
-            case 1:
-                root.PreOrdem();
-                break;
-            case 2:
-                root.PosOrdem();
-                break;
-            case 3:
-                root.EmOrdem(teste);
-                break;
-        }
     }
 
     /// <summary>
     /// Mostra a arvore
     /// </summary>
-    /// <param name="node"></param>
-    /// <param name="prefix"></param>
     public void ImprimirArvore()
     {
         if (root != null)
