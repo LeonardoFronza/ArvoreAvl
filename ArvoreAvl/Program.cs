@@ -1,9 +1,6 @@
 ﻿using ArvoreAvl.src.Controllers;
-using ArvoreAvl.src.Dtos;
-
 
 CSVController Utils = new CSVController();
-IList<Pessoa> Pessoas = new List<Pessoa>();
 
 bool sair = true;
 Console.WriteLine("Olá, seja bem vindo(a) ao programa de árvore AVL! ");
@@ -16,7 +13,8 @@ while (sair)
     Console.WriteLine("2 - Buscar por nome");
     Console.WriteLine("3 - Buscar por cpf");
     Console.WriteLine("4 - Buscar por Data de Nascimento");
-    Console.WriteLine("5 - Imprimir conforme caminhamento");
+    Console.WriteLine("5 - Imprimir todas as árvores");
+    Console.WriteLine("6 - Sair");
     Console.WriteLine(" ");
 
     string entrada = Console.ReadLine() ?? string.Empty;
@@ -28,33 +26,50 @@ while (sair)
             Console.WriteLine("Digite o caminho do arquivo que vai ser importado: ");
             string path = Console.ReadLine();
 
-            Pessoas = Utils.ReadCsv(path);
+            Utils.ReadCsv(path);
 
             Console.WriteLine("Pessoas importadas com sucesso!");
             break;
         case 2:
-            Utils.BuscaPessoaPeloNome("C");
+            Console.WriteLine("Digite o nome a ser buscado: ");
+            string nome = Console.ReadLine();
+            Utils.BuscaPessoaPeloNome(nome);
 
             break;
         case 3:
-            Utils.BuscaPessoaPeloCpf(12345678910);
+            Console.WriteLine("Digite o cpf da pessoa a ser buscada: ");
+            string cpf = Console.ReadLine();
+
+            while (!long.TryParse(cpf, out long cpfNumerico))
+            {
+                Console.WriteLine("CPF inválido. Por favor, digite apenas números.");
+                cpf = Console.ReadLine();
+            }
+            Utils.BuscaPessoaPeloCpf(long.Parse(cpf));
             break;
         case 4:
-            Console.Write("Digita a data de inicio da busca: ");
+            Console.Write("Digite a data de início da busca (dd/mm/yyyy): ");
             string dataInicio = Console.ReadLine();
+            while (!ValidadorDeData.VerificaSeDataEhValida(dataInicio))
+            {
+                Console.Write("Data inválida. Digite novamente a data de início da busca (dd/mm/yyyy): ");
+                dataInicio = Console.ReadLine();
+            }
 
-            Console.Write("Digite a data de final da busca: ");
+            Console.Write("Digite a data de final da busca (dd/mm/yyyy): ");
             string dataFim = Console.ReadLine();
+            while (!ValidadorDeData.VerificaSeDataEhValida(dataFim))
+            {
+                Console.Write("Data inválida. Digite novamente a data de final da busca (dd/mm/yyyy): ");
+                dataFim = Console.ReadLine();
+            }
 
-            Utils.BuscaPessoaPelaDataDeNascimento(dataInicio, dataFim);
+            Utils.BuscaPessoaPelaDataDeNascimento(DateOnly.ParseExact(dataInicio, "dd/MM/yyyy", null), DateOnly.ParseExact(dataFim, "dd/MM/yyyy", null));
             break;
         case 5:
-            //Utils.testeImpressao();
+            Utils.ImprimirTodasAsArvores();
             break;
         case 6:
-
-            break;
-        case 7:
             Console.WriteLine("Saindo...");
             sair = false;
             break;

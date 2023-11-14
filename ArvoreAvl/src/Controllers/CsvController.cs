@@ -6,7 +6,7 @@ public class CSVController
 {
     public NodeController<string> ArvoreNome = new NodeController<string>();
     public NodeController<long> ArvoreCpf = new NodeController<long>();
-    public NodeController<string> ArvoreData = new NodeController<string>();
+    public NodeController<DateOnly> ArvoreData = new NodeController<DateOnly>();
     IList<Pessoa> pessoas = new List<Pessoa>();
 
     /// <summary>
@@ -38,7 +38,7 @@ public class CSVController
 
                 ArvoreNome.Inserir(pessoa.Nome, i);
                 ArvoreCpf.Inserir(pessoa.Cpf, i);
-                ArvoreData.Inserir(pessoa.DataNascimento, i++);
+                ArvoreData.Inserir(ValidadorDeData.ConversorStringInDateOnly(pessoa.DataNascimento), i++);
                 pessoas.Add(pessoa);
             }
         }
@@ -54,15 +54,16 @@ public class CSVController
     }
 
     //ok
-    public void BuscaPessoaPelaDataDeNascimento(string dataInicio, string dataFim)
+    public void BuscaPessoaPelaDataDeNascimento(DateOnly dataInicio, DateOnly dataFim)
     {
-        IList<Node<string>> lista = new List<Node<string>>();
+        IList<Node<DateOnly>> lista = new List<Node<DateOnly>>();
         ArvoreData.ImprimirArvore();
+
         lista = ArvoreData.BuscarDataNascimento(dataInicio, dataFim);
 
         foreach (var pessoa in lista)
         {
-            Console.WriteLine(pessoa.ToString());
+            Console.WriteLine(pessoas[pessoa.Index].ToString());
         }
     }
 
@@ -71,5 +72,13 @@ public class CSVController
     {
         ArvoreNome.ImprimirArvore();
         ArvoreNome.Buscar(nome).EmOrdem(pessoas, nome);
+    }
+
+    //ok
+    public void ImprimirTodasAsArvores()
+    {
+        ArvoreNome.ImprimirArvore();
+        ArvoreCpf.ImprimirArvore();
+        ArvoreData.ImprimirArvore();
     }
 }

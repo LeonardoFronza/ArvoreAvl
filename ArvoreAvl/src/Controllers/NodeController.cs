@@ -35,16 +35,6 @@ public class NodeController<T> where T : IComparable<T>
         return root;
     }
 
-    public void Remover(T value)
-    {
-        if (root is null)
-        {
-            return;
-        }
-
-        root = root.Remover(value);
-    }
-
     /// <summary>
     /// Busca um item na arvore
     /// </summary>
@@ -65,6 +55,9 @@ public class NodeController<T> where T : IComparable<T>
         root.EmOrdem(pessoa, pesquisa);
     }
 
+    /// <summary>
+    /// Busca elementos em um intervalo de dados.
+    /// </summary>
     public IList<Node<T>> BuscarDataNascimento(T value, T value2)
     {
         IList<Node<T>> nodeBusca = new List<Node<T>>();

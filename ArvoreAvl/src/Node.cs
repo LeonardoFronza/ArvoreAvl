@@ -40,16 +40,16 @@ public class Node<T> where T : IComparable<T>
     {
         if (Id.CompareTo(dado) == 0 && index != Index)
         {
-            Validate6000(dado, index, index < Index);
+            Validator6000(dado, index, index < Index);
         }
 
         if (Id.CompareTo(dado) > 0)
         {
-            Validate6000(dado, index, true);
+            Validator6000(dado, index, true);
         }
         else if (Id.CompareTo(dado) < 0)
         {
-            Validate6000(dado, index, false);
+            Validator6000(dado, index, false);
         }
 
         AtualizarBFactor();
@@ -59,7 +59,7 @@ public class Node<T> where T : IComparable<T>
     /// <summary>
     /// Valida os itens a serem inseridos.
     /// </summary>
-    private void Validate6000(T dado, int index, bool isLeft)
+    private void Validator6000(T dado, int index, bool isLeft)
     {
         Node<T> node = isLeft ? Esquerda : Direita;
 
@@ -211,7 +211,7 @@ public class Node<T> where T : IComparable<T>
             nodes.Add(this);
         }
 
-        if (Direita != null && value2.CompareTo(Id) > 0)
+        if (Direita != null && value2.CompareTo(Id) >= 0)
         {
             Direita.BuscarNoIntervaloDeDados(nodes, value, value2);
         }
@@ -266,7 +266,6 @@ public class Node<T> where T : IComparable<T>
         }
         else
         {
-            // Encontrou o nó a ser removido
             if (Esquerda == null && Direita == null)
             {
                 return null;
@@ -331,13 +330,5 @@ public class Node<T> where T : IComparable<T>
         {
             PrintTree(node.Direita, prefix + "    └── ");
         }
-    }
-
-    /// <summary>
-    /// Tratadando como mostrar o node.
-    /// </summary>
-    public override string ToString()
-    {
-        return $"Resultado: {{ Id: {Id}, Index: {Index} }}";
     }
 }

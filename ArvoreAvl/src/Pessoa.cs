@@ -10,12 +10,12 @@ public class Pessoa : IComparable<Pessoa>
 
     public int CompareTo(Pessoa other)
     {
-         if (other == null) return 1;
+        if (other == null) return 1;
         return Nome.CompareTo(other.Nome);
     }
 
     public override string ToString()
     {
-        return Nome+"/"+Cpf+"/"+DataNascimento;
+        return $"[ Nome: {Nome} CPF: {Cpf} RG: {Rg} Data de Nascimento: {DataNascimento} ]";
     }
 }
