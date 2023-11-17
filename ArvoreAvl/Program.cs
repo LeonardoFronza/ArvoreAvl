@@ -1,24 +1,43 @@
 ﻿using ArvoreAvl.src.Controllers;
+using ArvoreAvl.src.Utils;
 
 CSVController Utils = new CSVController();
 
 bool sair = true;
 Console.WriteLine("Olá, seja bem vindo(a) ao programa de árvore AVL! ");
-
+Console.WriteLine(" ");
 while (sair)
 {
-    Console.WriteLine(" ");
-    Console.WriteLine("Menu: ");
-    Console.WriteLine("1 - Pega dados arquivo CSV");
-    Console.WriteLine("2 - Buscar por nome");
-    Console.WriteLine("3 - Buscar por cpf");
-    Console.WriteLine("4 - Buscar por Data de Nascimento");
-    Console.WriteLine("5 - Imprimir todas as árvores");
-    Console.WriteLine("6 - Sair");
-    Console.WriteLine(" ");
+    string entrada;
+    int opcao = 0;
+    do
+    {
+        if (!Utils.VerificaSePossuiPessoasNaLista())
+        {
+            entrada = "1";
+        }
+        else
+        {
+            Console.WriteLine(" ");
+            Console.WriteLine("Menu: ");
+            Console.WriteLine("1 - Pega dados arquivo CSV");
+            Console.WriteLine("2 - Buscar por nome");
+            Console.WriteLine("3 - Buscar por cpf");
+            Console.WriteLine("4 - Buscar por Data de Nascimento");
+            Console.WriteLine("5 - Imprimir todas as árvores");
+            Console.WriteLine("6 - Sair");
+            Console.WriteLine(" ");
 
-    string entrada = Console.ReadLine() ?? string.Empty;
-    int.TryParse(entrada, out int opcao);
+            Console.Write("Digite a opção desejada: ");
+            entrada = Console.ReadLine() ?? string.Empty;
+            Console.WriteLine(" ");
+        }
+
+        if (!int.TryParse(entrada, out opcao))
+        {
+            Console.WriteLine("Por favor, insira um número válido.");
+        }
+    } while (!int.TryParse(entrada, out opcao));
 
     switch (opcao)
     {

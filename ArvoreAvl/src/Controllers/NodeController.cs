@@ -50,9 +50,10 @@ public class NodeController<T> where T : IComparable<T>
         return nodeBusca;
     }
 
-    public void EmOrdem(IList<Pessoa> pessoa, string pesquisa)
+    public IList<Node<T>> EmOrdem(string pesquisa)
     {
-        root.EmOrdem(pessoa, pesquisa);
+        IList<Node<T>> nodeBusca = new List<Node<T>>();
+        return root.EmOrdem(nodeBusca, pesquisa);
     }
 
     /// <summary>

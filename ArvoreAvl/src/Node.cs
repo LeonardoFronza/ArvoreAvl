@@ -178,7 +178,7 @@ public class Node<T> where T : IComparable<T>
     /// </summary>
     public Node<T> Buscar(T value)
     {
-        if (Id.ToString().StartsWith(value.ToString()))
+        if ((value is string && Id.ToString().StartsWith(value.ToString())) || (value is not string && Id.CompareTo(value) == 0))
         {
             return this;
         }
@@ -222,23 +222,23 @@ public class Node<T> where T : IComparable<T>
     /// <summary>
     /// Mostra os itens da arvore em ordem.
     /// </summary>
-    public void EmOrdem(IList<Pessoa> pessoa, string pesquisa)
+    public IList<Node<T>> EmOrdem(IList<Node<T>> pessoas, string pesquisa)
     {
         if (Esquerda is not null)
         {
-            Esquerda.EmOrdem(pessoa, pesquisa);
+            Esquerda.EmOrdem(pessoas, pesquisa);
         }
 
         if (Id.ToString().StartsWith(pesquisa))
         {
-            Console.WriteLine(pessoa[Index].ToString());
+            pessoas.Add(this);
         }
 
         if (Direita is not null)
         {
-            Direita.EmOrdem(pessoa, pesquisa);
+            Direita.EmOrdem(pessoas, pesquisa);
         }
-
+        return pessoas;
     }
 
     /// <summary>

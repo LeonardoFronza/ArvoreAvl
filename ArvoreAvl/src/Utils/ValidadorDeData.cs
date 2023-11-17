@@ -1,3 +1,5 @@
+namespace ArvoreAvl.src.Utils;
+
 public class ValidadorDeData
 {
    public static bool VerificaSeDataEhValida(string data)
