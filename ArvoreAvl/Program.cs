@@ -52,7 +52,7 @@ while (sair)
         case 2:
             Console.WriteLine("Digite o nome a ser buscado: ");
             string nome = Console.ReadLine();
-            Utils.BuscaPessoaPeloNome(nome);
+            Utils.BuscaPessoaPeloNome(nome.ToUpper());
 
             break;
         case 3:

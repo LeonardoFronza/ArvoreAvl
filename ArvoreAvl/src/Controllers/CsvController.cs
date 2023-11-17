@@ -40,7 +40,7 @@ public class CSVController
                     CidadeNascimento = values[4]
                 };
 
-                ArvoreNome.Inserir(pessoa.Nome, i);
+                ArvoreNome.Inserir(pessoa.Nome.ToUpper(), i);
                 ArvoreCpf.Inserir(pessoa.Cpf, i);
                 ArvoreData.Inserir(ValidadorDeData.ConversorStringInDateOnly(pessoa.DataNascimento), i++);
                 pessoas.Add(pessoa);
