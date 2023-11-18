@@ -1,6 +1,10 @@
-﻿using ArvoreAvl.src.Controllers;
+﻿using ArvoreAvl.src;
+using ArvoreAvl.src.Controllers;
+using ArvoreAvl.src.Dtos;
 
 NodeController NodeController = new NodeController();
+IList<Pessoa> Pessoas = new List<Pessoa>();
+
 bool sair = true;
 Console.WriteLine("Olá, seja bem vindo(a) ao programa de árvore AVL! ");
 
@@ -13,7 +17,7 @@ while (sair)
     Console.WriteLine("3 - Remover");
     Console.WriteLine("4 - Mostrar arvore");
     Console.WriteLine("5 - Imprimir conforme caminhamento");
-    Console.WriteLine("6 - Sair");
+    Console.WriteLine("6 - Ler arquivo CSV");
     Console.WriteLine(" ");
 
     string entrada = Console.ReadLine() ?? string.Empty;
@@ -80,6 +84,13 @@ while (sair)
             NodeController.BuscaCaminhamento(tipoCaminhamento);
             break;
         case 6:
+            Pessoas = CSVController.ReadCsv("C:/Users/Leonardo Fronza/Desktop/ArvoreAvl/teste.csv");
+
+            CSVController.BuscaPessoaPeloCpf(Pessoas, 12345678910);
+            CSVController.BuscaPessoaPorChave(Pessoas, "Fulano");
+
+            break;
+        case 7:
             Console.WriteLine("Saindo...");
             sair = false;
             break;
